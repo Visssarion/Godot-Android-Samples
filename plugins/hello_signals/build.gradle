@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdk versions.minSdk
         targetSdk versions.targetSdk
-        versionCode 1
-        versionName "1.0"
     }
 
     namespace = "fhuyakou.godot.plugin.android.hellosignals"

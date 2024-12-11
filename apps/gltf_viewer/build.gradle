@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "fhuyakou.godot.app.android.gltfviewer"
-    compileSdk versions.compileSdk
+    compileSdk 34
 
     defaultConfig {
         // The default ignore pattern for the 'assets' directory includes hidden files and
