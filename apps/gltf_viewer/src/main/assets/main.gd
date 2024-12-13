@@ -13,6 +13,7 @@ func _ready() -> void:
 
 		# Signal fired from the app logic to update the gltf model being shown
 		appPlugin.connect("show_gltf", _load_gltf)
+		appPlugin.connect("debug_window", _debug_window_show)
 	else:
 		print("App plugin is not available")
 
@@ -31,9 +32,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	if event is InputEventMagnifyGesture:
 		# Scale the gltf model based on pinch / zoom gestures
-		current_gltf_node.scale = current_gltf_node.scale * event.factor
+		current_gltf_node.scale = clamp(current_gltf_node.scale * event.factor, Vector3(0.1, 0.1, 0.1), Vector3(10.0, 10.0, 10.0))
 		
-	if event is InputEventMouseMotion and event.button_mask == MOUSE_BUTTON_MASK_LEFT:
+	if event is InputEventScreenDrag:# and event.button_mask == MOUSE_BUTTON_MASK_LEFT:
 		# Rotate the gltf model based on swipe gestures
 		var relative_drag: Vector2 = event.relative
 		current_gltf_node.rotate_y(relative_drag.x / 100)
@@ -42,9 +43,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Load the gltf model specified by the given path
 func _load_gltf(gltf_path: String) -> void:
+	print("Loading GLTF:" + gltf_path)
 	if current_gltf_node != null:
 		remove_child(current_gltf_node)
 	
-	current_gltf_node = load(gltf_path).instantiate()
+	#current_gltf_node = load(gltf_path).instantiate()
+	var gltf_document_load := GLTFDocument.new()
+	var gltf_state_load := GLTFState.new()
+	var error := gltf_document_load.append_from_file(gltf_path, gltf_state_load)
+	if error == OK:
+		current_gltf_node = gltf_document_load.generate_scene(gltf_state_load)
+		add_child(current_gltf_node)
+	else:
+		printerr("Couldn't load glTF scene (error code: %s)." % error_string(error))
 
-	add_child(current_gltf_node)
+func _debug_window_show() -> void:
+	print("SHOWING DEBUG!!")
+	$FileDialog.show()

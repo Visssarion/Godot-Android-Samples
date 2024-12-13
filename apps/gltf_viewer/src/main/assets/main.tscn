@@ -1,42 +1,37 @@
 [gd_scene load_steps=5 format=3 uid="uid://0nlbmm01ux5s"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_15c77"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ibrrl"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-
-[sub_resource type="Sky" id="Sky_ofxcw"]
-sky_material = SubResource("ProceduralSkyMaterial_ibrrl")
-
-[sub_resource type="Environment" id="Environment_2hxxm"]
-background_mode = 2
-sky = SubResource("Sky_ofxcw")
-tonemap_mode = 2
+[ext_resource type="Script" path="res://scripts/debug_node.gd" id="2_2o2f3"]
+[ext_resource type="Environment" uid="uid://duk3lfeegnnit" path="res://resources/new_enviroment.tres" id="2_nrr1h"]
+[ext_resource type="Script" path="res://scripts/file_dialog.gd" id="4_0ibcu"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_15c77")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
-shadow_enabled = true
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866026, -0.433012, 0.25, 0.316635, -0.861919, -0.396026, 0.386966, -0.263811, 0.883551, 0, 0, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_2hxxm")
+environment = ExtResource("2_nrr1h")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.15, 0.75)
+transform = Transform3D(1, 0, 0, 0, 0.961646, 0.274295, 0, -0.274295, 0.961646, 2.08165e-12, 0.585736, 1.64236)
+fov = 60.0
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="DebugNode" type="Node" parent="."]
+script = ExtResource("2_2o2f3")
 
-[node name="Label" type="Label" parent="Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Vissa was here"
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+position = Vector2i(100, 65)
+size = Vector2i(708, 445)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+root_subfolder = "/storage/emulated/0"
+script = ExtResource("4_0ibcu")
+
+[connection signal="file_selected" from="FileDialog" to="FileDialog" method="_on_file_selected"]

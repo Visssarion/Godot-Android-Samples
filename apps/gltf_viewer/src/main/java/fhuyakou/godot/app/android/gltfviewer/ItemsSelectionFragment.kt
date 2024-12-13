@@ -60,6 +60,8 @@ class ItemsSelectionFragment : Fragment(), GLTFItemRecyclerViewAdapter.Listener 
         val parentActivity = activity
         if (parentActivity is MainActivity) {
             parentActivity.appPlugin?.showGLTF(item.glbFilepath)
+            //parentActivity.appPlugin?.debugWindow() <- Window for file loading
+            // parentActivity.appPlugin?.showGLTF("/storage/emulated/0/Path/To/File.glb")
         }
     }
 }

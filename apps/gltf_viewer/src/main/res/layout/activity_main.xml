@@ -7,7 +7,7 @@
     <FrameLayout
         android:id="@+id/godot_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="500dp" />
 
     <FrameLayout
         android:id="@+id/item_selection_fragment_container"
