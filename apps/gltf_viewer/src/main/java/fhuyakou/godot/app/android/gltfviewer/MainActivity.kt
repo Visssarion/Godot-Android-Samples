@@ -2,11 +2,15 @@ package fhuyakou.godot.app.android.gltfviewer
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import org.godotengine.godot.Godot
 import org.godotengine.godot.GodotFragment
@@ -27,7 +31,10 @@ class MainActivity: AppCompatActivity(), GodotHost {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
+        val selectFileButton = findViewById<Button>(R.id.btn_select_file)
+        selectFileButton.setOnClickListener {
+            openFileChooser()
+        }
         val currentGodotFragment = supportFragmentManager.findFragmentById(R.id.godot_fragment_container)
         if (currentGodotFragment is GodotFragment) {
             godotFragment = currentGodotFragment
@@ -51,7 +58,29 @@ class MainActivity: AppCompatActivity(), GodotHost {
         checkAndRequestPermissions(this)
 
     }
+    private fun openFileChooser() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "*/*" // Используйте нужный MIME-тип
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        // Создаем chooser для лучшего UX
+        val chooser = Intent.createChooser(intent, "Select a GLTF File")
+        startActivityForResult(chooser, 42)
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+        if (requestCode == 42 && resultCode == Activity.RESULT_OK) {
+            val uri: Uri? = data?.data
+            if (uri != null) {
+                // Преобразование Uri в строковый путь
+                val gltfPath = uri.path
+                if (gltfPath != null) {
+                    appPlugin?.showGLTF(gltfPath)
+                }
+            }
+        }
+    }
     private fun initAppPluginIfNeeded(godot: Godot) {
         if (appPlugin == null) {
             appPlugin = AppPlugin(godot)

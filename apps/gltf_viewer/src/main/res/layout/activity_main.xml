@@ -8,7 +8,13 @@
         android:id="@+id/godot_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="500dp" />
-
+    <Button
+        android:id="@+id/btn_select_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="Select GLTF File" />
     <FrameLayout
         android:id="@+id/item_selection_fragment_container"
         android:layout_width="match_parent"
