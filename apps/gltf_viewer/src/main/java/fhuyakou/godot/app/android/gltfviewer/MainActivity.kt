@@ -12,6 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
+import getAbsolutePath
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.godotengine.godot.Godot
 import org.godotengine.godot.GodotFragment
 import org.godotengine.godot.GodotHost
@@ -75,8 +81,17 @@ class MainActivity: AppCompatActivity(), GodotHost {
             if (uri != null) {
                 // Преобразование Uri в строковый путь
                 val gltfPath = uri.path
-                if (gltfPath != null) {
-                    appPlugin?.showGLTF(gltfPath)
+                val path = getAbsolutePath(this, uri)
+                Log.i("Test", path.toString())
+                if (path != null) {
+
+
+                    Log.i("Test", path)
+
+                    GlobalScope.launch(Dispatchers.Main) {
+                        awaitFrame()
+                        appPlugin?.showGLTF(path)
+                    }
                 }
             }
         }
